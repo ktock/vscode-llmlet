@@ -39,6 +39,8 @@ jobs:
     runs-on: ubuntu-24.04
     name: Release
     needs: [build]
+    permissions:
+      contents: write
     env:
       OUTPUT_DIR: ${{ github.workspace }}/builds
     steps:
