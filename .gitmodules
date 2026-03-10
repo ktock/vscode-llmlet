@@ -1,0 +1,6 @@
+[submodule "vendor/github.com/ktock/llmlet"]
+	path = vendor/github.com/ktock/llmlet
+	url = https://github.com/ktock/llmlet.git
+[submodule "vendor/github.com/container2wasm/container2wasm"]
+	path = vendor/github.com/container2wasm/container2wasm
+	url = https://github.com/container2wasm/container2wasm.git

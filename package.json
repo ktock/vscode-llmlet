@@ -1,0 +1,130 @@
+{
+  "name": "llmlet",
+  "displayName": "llmlet",
+  "publisher": "ktock",
+  "description": "LLM and Terminal inside VSCode for the Web",
+  "author": "ktock",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.108.1"
+  },
+  "categories": [
+    "Other"
+  ],
+  "repository": {
+      "type": "git",
+      "url": "https://github.com/ktock/vscode-llmlet.git"
+  },
+  "bugs": {
+      "url": "https://github.com/ktock/vscode-llmlet/issues"
+  },
+  "activationEvents": [],
+  "browser": "./dist/web/extension.js",
+  "contributes": {
+    "views": {
+      "llmlet-view": [
+        {
+          "type": "webview",
+          "id": "llmlet.view",
+          "name": "llmlet"
+        }
+      ]
+    },
+    "viewsContainers": {
+      "panel": [
+        {
+          "id": "llmlet-view",
+          "title": "llmlet",
+          "icon": "$(extensions)"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "LLMlet",
+      "type": "object",
+      "properties": {
+        "llmlet.model": {
+          "type": "string",
+          "default": "https://huggingface.co/unsloth/Qwen3.5-4B-GGUF/resolve/main/Qwen3.5-4B-Q3_K_M.gguf",
+          "description": "URL of the model to use"
+        },
+        "llmlet.quiet": {
+          "type": "boolean",
+          "default": false,
+          "description": "Suppress raw output from the model"
+        },
+        "llmlet.contextSize": {
+          "type": "integer",
+          "default": 10240,
+          "description": "Context size"
+        },
+        "llmlet.ubatchSize": {
+          "type": "integer",
+          "default": 96,
+          "description": "Ubatch size"
+        },
+        "llmlet.enableWebGPU": {
+          "type": "boolean",
+          "default": false,
+          "description": "Use WebGPU if available"
+        },
+        "llmlet.container.image": {
+          "type": "string",
+          "default": "",
+          "description": "URL of the container image to use"
+        },
+        "llmlet.container.workspaceMountpoint": {
+          "type": "string",
+          "default": "/workspace",
+          "description": "Path to mount workspaces"
+        },
+        "llmlet.peer.enabled": {
+          "type": "boolean",
+          "default": false,
+          "description": "Enable to connect with other peers"
+        },
+        "llmlet.peer.peers": {
+          "type": "string",
+          "default": "",
+          "description": "Other peers to connect to / accept (comma or newline separated)"
+        },
+        "llmlet.peer.peerServer": {
+          "type": "string",
+          "default": "",
+          "description": "Address to the PeerJS signaling server. Empty means PeerJS's public server."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "test": "vscode-test-web --browserType=chromium --extensionDevelopmentPath=. --extensionTestsPath=dist/web/test/suite/index.js",
+    "pretest": "npm run compile-web",
+    "build:vendor": "make vendor",
+    "vscode:prepublish": "npm run build:vendor && npm run package-web",
+    "compile-web": "webpack",
+    "watch-web": "webpack --watch",
+    "package-web": "webpack --mode production --devtool hidden-source-map",
+    "lint": "eslint src",
+    "run-in-browser": "vscode-test-web --browserType=chromium --extensionDevelopmentPath=. ."
+  },
+  "devDependencies": {
+    "@types/assert": "^1.5.11",
+    "@types/diff": "^5.2.2",
+    "@types/mocha": "^10.0.10",
+    "@types/vscode": "^1.108.1",
+    "@types/webpack-env": "^1.18.8",
+    "@vscode/test-web": "^0.0.78",
+    "assert": "^2.1.0",
+    "eslint": "^9.39.2",
+    "mocha": "^11.7.5",
+    "process": "^0.11.10",
+    "ts-loader": "^9.5.4",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.52.0",
+    "webpack": "^5.104.1",
+    "webpack-cli": "^6.0.1"
+  },
+  "dependencies": {
+    "diff": "^5.2.2"
+  }
+}
