@@ -59,7 +59,7 @@ jobs:
         EOF
         ASSET_ARGS=()
         ls -al ${OUTPUT_DIR}/
-        for F in ${OUTPUT_DIR}/builds-package/* ; do
+        for F in ${OUTPUT_DIR}/* ; do
           ASSET_ARGS+=("$F")
         done
         gh release create -F ${GITHUB_WORKSPACE}/release-note.txt --draft --title "${RELEASE_TAG}" "${RELEASE_TAG}" ${ASSET_ARGS[@]}
