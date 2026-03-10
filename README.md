@@ -41,6 +41,7 @@ Test it in the following steps.
 It displays a chat session with the model.
 
 Specify the URL of the GGUF model to run in `llmlet.model`.
+The default value is [Qwen3.5 4B GGUF format by unsloth](https://huggingface.co/unsloth/Qwen3.5-4B-GGUF).
 You might need sufficiently large models such as `Qwen3.5 4B` to run tasks correctly.
 
 The model can access the files in the workspace and the terminal.
