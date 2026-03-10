@@ -108,8 +108,8 @@ Use `.vscode/settings.json` to set values specific to the workspace (e.g. contai
 ## How it works
 
 - LLM runner: Uses a Wasm-compiled llama.cpp with patches to enable P2P distributed inference among browsers connected via WebRTC. For details, see the [LLMlet](https://github.com/ktock/llmlet) repo.
-- Terminal: Runs a x86_64 Linux-based container on a [Wasm-compiled QEMU](github.com/ktock/qemu-wasm) running inside browser. For defailts, see the [container2wasm](https://github.com/container2wasm/container2wasm) repo.
-- Networking: NW stack runs inside the browser and uses the browser's Fetch API to enable HTTP(S) networking from the terminal. For details see also [the docs in container2wasm](https://github.com/ktock/container2wasm/tree/main/examples/networking/fetch).
+- Terminal: Runs a x86_64 Linux-based container on a [Wasm-compiled QEMU](https://github.com/ktock/qemu-wasm) running inside browser. For defailts, see the [container2wasm](https://github.com/container2wasm/container2wasm) repo.
+- Networking: NW stack runs inside the browser and uses the browser's Fetch API to enable HTTP(S) networking from the terminal. For details see also [the docs in container2wasm](https://github.com/container2wasm/container2wasm/tree/b92728c5fb64385f56aff48bfd1f873864c334af/examples/networking/fetch).
 
 ## Remaining issues
 
