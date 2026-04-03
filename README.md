@@ -48,9 +48,6 @@ The model can access the files in the workspace and the terminal.
 
 As of now, the context size is limited (default is 10240) and long tasks don't work.
 
-The model runs on Wasm by default.
-WebGPU support is best effort (can be enabled with `llmlet.enableWebGPU`).
-
 ### `TERMINAL` panel
 
 It displays the terminal of a Linux-based container running inside the browser.
@@ -96,7 +93,7 @@ When starting an LLM chat in a peer, the model is split in layer granularity and
 - `llmlet.quiet` *boolean* : Suppress raw output from the model (default: false)
 - `llmlet.contextSize` *integer* : Context size (default: 10240)
 - `llmlet.ubatchSize` *integer* : Ubatch size (default: 96)
-- `llmlet.enableWebGPU` *boolean* : Use WebGPU if available (default: false)
+- `llmlet.enableWebGPU` *boolean* : Use WebGPU if available (default: true)
 - `llmlet.container.image` *string* : URL of the container image to use (example value: Alpine + gcc: `https://ktock.github.io/image-gcc-alpine/oci/`) (default: "")
 - `llmlet.container.workspaceMountpoint` : *string* : Path to mount workspaces (default: "/workspace")
 - `llmlet.peer.enabled` *boolean* : Enable to connect with other peers (default: false)
