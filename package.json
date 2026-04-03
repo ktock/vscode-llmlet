@@ -65,7 +65,7 @@
         },
         "llmlet.enableWebGPU": {
           "type": "boolean",
-          "default": false,
+          "default": true,
           "description": "Use WebGPU if available"
         },
         "llmlet.container.image": {
