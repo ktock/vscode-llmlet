@@ -69,6 +69,7 @@ class LLMletViewProvider implements vscode.WebviewViewProvider {
 <button id="cancelButton" class="btn btn-black border-white text-white btn-outline-secondary">Cancel</button>
 </div>
 </div>
+<p id="log-message" class="bg-black font-size: 0.8rem;" style="color: gray; white-space: nowrap; overflow: hidden;"></p>
 </div>
 
 <script src="https://unpkg.com/peerjs@1.5.5/dist/peerjs.min.js"></script>

@@ -55,7 +55,9 @@ function activateMaster(master) {
     });
 }
 
+const logmessage = document.getElementById('log-message');
 function logToVSCodeOutput(o) {
+    logmessage.textContent = o;
     vscodePostMessage("log", {
         message: o,
     });
