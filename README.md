@@ -129,3 +129,7 @@ You can also run it on a device with faster processors.
 
 Sometimes clearing the browser cache might fix the issue.
 Open an issue if you find that models don't start.
+
+### The model outputs broken strings
+
+Disable the WebGPU backend by setting `llmlet.enableWebGPU` to false and try again.
