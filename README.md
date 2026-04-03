@@ -89,7 +89,7 @@ When starting an LLM chat in a peer, the model is split in layer granularity and
 
 ## Extension Settings
 
-- `llmlet.model` *string* : URL of the model (GGUF format) to use (default: `https://huggingface.co/unsloth/Qwen3.5-4B-GGUF/resolve/main/Qwen3.5-4B-Q3_K_M.gguf`)
+- `llmlet.model` *string* : URL of the model (GGUF format) to use (default: `https://huggingface.co/unsloth/Qwen3.5-4B-GGUF/resolve/main/Qwen3.5-4B-Q4_0.gguf`)
 - `llmlet.quiet` *boolean* : Suppress raw output from the model (default: false)
 - `llmlet.contextSize` *integer* : Context size (default: 10240)
 - `llmlet.ubatchSize` *integer* : Ubatch size (default: 96)
