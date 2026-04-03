@@ -4,7 +4,7 @@
   "publisher": "ktock",
   "description": "LLM and Terminal inside VSCode for the Web",
   "author": "ktock",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "engines": {
     "vscode": "^1.108.1"
   },
