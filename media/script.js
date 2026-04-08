@@ -950,7 +950,13 @@ var callTools = {
 const llmletModJsBlobUri = await makeBlobUrl(vendorFiles['llmlet-mod.js']);
 
 const enableWebGPU = await getExtensionConfig('enableWebGPU');
-const peerEnabled = await getExtensionConfig('peer.enabled');
+let peerEnabled = await getExtensionConfig('peer.enabled');
+const remoteEngineURL = await getExtensionConfig('remoteAPI.url');
+const remoteEngineModel = await getExtensionConfig('remoteAPI.model');
+if ((remoteEngineURL != "") && (remoteEngineModel != "")) {
+    console.log("Using remote engine. Disabling local peer.");
+    peerEnabled = false;
+}
 
 var node;
 var peer;
@@ -1031,9 +1037,113 @@ var clientOptions = {
     quiet: llmletClientQuiet,
     args: ['-c', `${llmletClientContextSize}`, '-u', `${llmletClientUbatchSize}`],
     disableWebGPU: !enableWebGPU,
+    mainScriptUrlOrBlob: llmletModJsBlobUri,
 };
 
-function handleSystemCommand(msg, module, clientOptions) {
+async function newLocalClient() {
+    const module = await import(llmletModJsBlobUri);
+    return startClient(peer, module, clientOptions);
+}
+
+async function newRemoteClient(endpoint, modelName) {
+    var c = {
+        context: [],
+    };
+
+    async function getResponse() {
+        const contextStr = JSON.stringify(c.context);
+        const data = `{
+  "model": "${modelName}",
+  "messages": ${contextStr},
+  "response_format": {
+    "type": "json_schema",
+    "json_schema": {
+      "name": "message",
+      "strict": true,
+      "schema": ${functionSchema}
+    }
+  }
+}`
+        const response = await fetch(endpoint, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: data
+        });
+        if (!response.ok) {
+            throw new Error(`failed chat completions api request: ${response.status}`);
+        }
+        const text = await response.text();
+        const output = JSON.parse(text);
+        return output.choices[0].message.content;
+    }
+
+    var pending_prompt_reader = [];
+    function waitForInput() {
+        pending_prompt_reader.push((res) => {
+            printText(output, res + '\n');
+            handleInput(res);
+        });
+    }
+
+    var inputBuf = "";
+    async function handleInput(msg) {
+        c.context.push({"role": "user", "content": msg});
+        var resp = await getResponse();
+        if (!llmletClientQuiet) printText(output, resp + '\n');
+        c.context.push({"role": "assistant", "content": resp});
+        var ok = callTools.handle(
+            resp,
+            (res) => {
+                if (typeof res === "string") {
+                    handleInput(res);
+                } else {
+                    handleInput(JSON.stringify(res));
+                }
+            },
+            {
+                output: (l) => printText(output, l),
+            },
+        );
+        if (ok) {
+            return;
+        }
+        printText(output, "(you) ");
+        if (inputBuf != "") {
+            const res = inputBuf;
+            inputBuf = "";
+            printText(output, res + '\n');
+            c.input(res);
+        } else {
+            waitForInput();
+        }
+    }
+
+    c.input = (msg) => {
+        if (pending_prompt_reader.length == 0) {
+            inputBuf = msg;
+        } else {
+            var cb = pending_prompt_reader.shift();
+            cb(msg);
+        }
+    }
+    c.isRunning = () => true;
+    c.context.push({"role": "system", "content": createToolsSystemPrompt()});
+    printText(output, "(you) ");
+    waitForInput();
+
+    return c;
+}
+
+async function newClient() {
+    if ((remoteEngineURL != "") && (remoteEngineModel != "")) {
+        return newRemoteClient(remoteEngineURL, remoteEngineModel);
+    }
+    return newLocalClient();
+}
+
+async function handleSystemCommand(msg) {
     var cmds = msg.split(/[\s]+/).filter((w) => w != "");
     if (cmds.length == 0) {
         return false;
@@ -1059,7 +1169,7 @@ Available commands are the following:
             runningClient.exit();
         }
         decodingCancel = false;
-        runningClient = startClient(peer, module, clientOptions);
+        runningClient = newClient();
         return true;
     case "/exit":
         printText(output, "(command) " + msg + "\n");
@@ -1097,17 +1207,13 @@ async function enterPrompt() {
         return;
     }
 
-    const module = await import(llmletModJsBlobUri);
-
-    if (handleSystemCommand(msg, module, clientOptions)) {
+    if (await handleSystemCommand(msg)) {
         return;
     }
 
     if (!runningClient || !runningClient.isRunning()) {
-        clientOptions.mainScriptUrlOrBlob = llmletModJsBlobUri;
-        clientOptions.locateFile = (path) => vendorFiles[path];
         decodingCancel = false;
-        runningClient = startClient(peer, module, clientOptions);
+        runningClient = await newClient();
     }
 
     runningClient.input(msg);
